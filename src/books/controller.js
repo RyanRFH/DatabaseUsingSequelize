@@ -20,11 +20,22 @@ const getAllBooks = async (req, res) => {
     }
 }
 
-const deleteBook = async (req, res) => {
+const getBookByTitle = async (req,res) => {
+    try {
+        const book = await Book.findOne({
+            where : {
+                title: req.params["title"]
+            }
+        })
+        res.status(200).json({message: "Success", book: book})
 
-    // {
-    //     title: "Book2"
-    // }
+    } catch (error) {
+        console.log(error)
+        res.status(501).json({errorMessage: error.message, error: error})
+    }
+}
+
+const deleteBook = async (req, res) => {
 
     try {
         const deletedBook = await Book.destroy({
@@ -37,8 +48,41 @@ const deleteBook = async (req, res) => {
     }
 }
 
+const deleteAllBooks = async (req, res) => {
+
+    try {
+        const deletedBooks = await Book.destroy({truncate: true})
+
+        res.status(200).json({message: "Success", booksDeleted: deletedBooks})
+    } catch (error) {
+        res.status(501).json({message: error.message, error: error})
+    }
+}
+
+const updateBook = async (req, res) => {
+    try {
+        const updatedBook = await Book.update({title : req.body.newBookTitle}, {
+            where: {
+                title: req.body.bookTitleToFind
+            }
+        });
+
+        res.status(200).json({message: "Success", bookUpdated: updatedBook})
+
+    } catch (error) {
+        const errorResponse = {
+            message: error.message,
+            error: error
+        }
+        res.status(501).json(errorResponse);
+    }
+}
+
 module.exports = {
     addBook,
     getAllBooks,
-    deleteBook
+    deleteBook,
+    getBookByTitle,
+    updateBook,
+    deleteAllBooks
 };

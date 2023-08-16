@@ -15,14 +15,24 @@ const addAuthor = async (req,res) => {
 }
 
 
-// const getAuthorAndBooks = async (req,res) => {
-//     try {
-//         Author.get
-//     } catch {
+const getAuthorAndBooks = async (req,res) => {
+    try {
+        const author = await Author.findOne({
+            where : {
+                authorName: req.params["author"]
+            },
+            include: Book
 
-//     }
-// }
+        })
+        res.status(200).json({message: "Success", author: author})
+
+    } catch (error) {
+        console.log(error)
+        res.status(501).json({errorMessage: error.message, error: error})
+    }
+}
 
 module.exports = {
-    addAuthor
+    addAuthor,
+    getAuthorAndBooks
 }
