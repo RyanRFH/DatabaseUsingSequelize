@@ -21,18 +21,19 @@ const syncTables = () => {
     Author.hasMany(Book);
     Book.belongsTo(Author);
 
-    // Genre.hasMany(Book);
-    // Book.belongsTo(Genre);
+    Genre.hasMany(Book);
+    Book.belongsTo(Genre);
 
 
     Book.sync({alter: true});
     Author.sync({alter: true});
-
+    Genre.sync({alter: true});
 
 };
 
 app.use(bookRouter);
 app.use(authorRouter);
+app.use(genreRouter);
 
 app.get("/health", (req, res) => {
     res.status(200).json({message: "API is working"})
